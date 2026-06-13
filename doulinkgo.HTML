@@ -1,5 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <style>
+        /* A little CSS styling */
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .hidden { display: none; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        button { background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+   .welcome-message{
+       border-radius:50%;
+       top:80%;
+       right:50%;
+   }
+    </style>
+</head>
+<body>
+
+    <div id="logged-out-view">
+        <h2>Please Log In</h2>
+        <input type="text" id="username-input" placeholder="Enter your name">
+        <button onclick="loginUser()" >Log In</button>
+    </div>
+
+    <div id="logged-in-view" class="hidden">
+        <h2 id="welcome-message" class="hidden"style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: ; margin: 0;">Welcome back!</h2>
+        
     <head>
         <title>Learning app</title>
         <link rel="stylesheet" href="doulinkgo.css">
@@ -37,7 +66,6 @@
         </div>
         <h1>Unit:1</h1>
         <center>
-        <h1>If you already login Don't click again</h1><a class="btn" type="buttom" href="a.HTML">login</a>
         <h2>Grammar</h2><a class="btn" type="buttom" href="d.html">1</a>
         <h2>video</h2><a class="btn" type="buttom" href="o.HTML">2</a><br>
     </center>
@@ -47,5 +75,51 @@
             Auditory (Aural): Learning through listening, lectures, and discussions.Kinesthetic (Tactile): Learning through physical experience, doing, and hands-on practice.Highly Effective Learning StrategiesSpaced Repetition: Reviewing material at gradually increasing intervals rather than cramming, which helps move information into long-term memory.Active Recall: Testing yourself on the material rather than passively re-reading.
             The Feynman Technique: Explaining a concept in simple, plain terms as if you were teaching it to someone else. This quickly exposes gaps in your understanding.For tips on how to build strong, sustainable learning habits in your daily routine:
         </p>
-    </body>
+        <button onclick="logoutUser()" style="background:red;">Log Out</button>
+    </div>
+    <script>
+        // 1. Check if the browser already remembers the user when the page loads
+        window.onload = function() {
+            const savedUser = localStorage.getItem("savedUsername");
+
+            if (savedUser) {
+                // If a name is saved, show the logged-in screen
+                showLoggedInScreen(savedUser);
+            }
+        };
+
+        // 2. Function to save the name when they click "Log In"
+        function loginUser() {
+            const nameInput = document.getElementById("username-input").value;
+            
+            if (nameInput.trim() !== "") {
+                // This line saves the name into the browser's memory!
+                localStorage.setItem("savedUsername", nameInput);
+                
+                showLoggedInScreen(nameInput);
+            } else {
+                alert("Please enter a name!");
+            }
+        }
+
+        // 3. Function to clear the memory when they click "Log Out"
+        function logoutUser() {
+            // This line erases the name from the browser's memory
+            localStorage.removeItem("savedUsername");
+            
+            // Switch views back to the login screen
+            document.getElementById("logged-out-view").classList.remove("hidden");
+            document.getElementById("logged-in-view").classList.add("hidden");
+            document.getElementById("username-input").value = "";
+        }
+
+        // Helper function to handle the CSS switching
+        function showLoggedInScreen(username) {
+            document.getElementById("logged-out-view").classList.add("hidden");
+            document.getElementById("logged-in-view").classList.remove("hidden");
+            document.getElementById("welcome-message").innerText =username;
+        }
+    </script>
+
+</body>
 </html>
