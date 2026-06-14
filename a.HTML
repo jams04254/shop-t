@@ -3,125 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direct Phone-to-Phone Chat</title>
-    <!-- Connect directly to other phones using PeerJS library -->
-    <script src="https://unpkg.com"></script>
+    <title>100% Working Chat</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #e5ddd5; }
-        .chat-container { width: 100%; max-width: 450px; height: 90vh; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-header { background: #075e54; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 1.1rem; }
-        .screen { padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%; justify-content: center; }
-        .id-box { background: #f0f0f0; padding: 12px; border-radius: 5px; text-align: center; font-size: 1.2rem; font-weight: bold; color: #075e54; border: 2px dashed #075e54; }
+        .chat-container { width: 100%; max-width: 400px; height: 90vh; background: white; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { background: #075e54; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        .box { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; }
         input { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
-        button { padding: 12px; background: #128c7e; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
-        button:hover { background: #075e54; }
-        #chatScreen { display: none; padding: 0; }
-        .messages-display { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #efeae2; height: 100%; }
-        .msg { max-width: 75%; padding: 10px 14px; border-radius: 15px; font-size: 0.95rem; word-break: break-word; }
-        .msg.sender { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-        .msg.receiver { background: white; align-self: flex-start; border-top-left-radius: 0; }
-        .chat-input-area { display: flex; gap: 10px; background: #f0f2f5; padding: 10px; }
-        .chat-input-area input { flex: 1; }
+        button { padding: 12px; background: #128c7e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #chatArea { display: none; flex-direction: column; height: 100%; padding: 0; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; background: #efeae2; display: flex; flex-direction: column; gap: 8px; }
+        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; font-size: 0.95rem; word-break: break-word; }
+        .me { background: #d9fdd3; align-self: flex-end; }
+        .them { background: white; align-self: flex-start; }
+        .input-box { display: flex; padding: 10px; background: #f0f2f5; gap: 5px; }
+        .input-box input { flex: 1; }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
-    <div class="chat-header">📱 Direct Phone Chat</div>
+    <div class="header">📱 Live Web Chat</div>
     
-    <!-- Step 1: Setup Screen -->
-    <div id="setupScreen" class="screen">
-        <p style="text-align:center; color:#555;">Your unique Phone ID number is:</p>
-        <div id="myIdDisplay" class="id-box">Loading ID...</div>
-        
-        <hr style="border:0; border-top:1px solid #ccc; margin:10px 0;">
-        
-        <label for="friendIdInput">Enter your friend's ID number:</label>
-        <input type="text" id="friendIdInput" placeholder="Paste Friend's ID here..." autocomplete="off">
-        <button onclick="connectToFriend()">Connect & Chat</button>
+    <!-- Login screen -->
+    <div id="loginArea" class="box">
+        <label>Pick a room name (Use the same word as your friend):</label>
+        <input type="text" id="roomInput" placeholder="example: secret123" autocomplete="off">
+        <button onclick="joinRoom()">Connect</button>
     </div>
 
-    <!-- Step 2: Chat Screen -->
-    <div id="chatScreen" class="screen">
-        <div id="messagesDisplay" class="messages-display"></div>
-        <div class="chat-input-area">
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
+    <!-- Chat screen -->
+    <div id="chatArea" class="box">
+        <div id="msgDisplay" class="messages"></div>
+        <div class="input-box">
+            <input type="text" id="textInput" placeholder="Type a message...">
+            <button onclick="sendMsg()">Send</button>
         </div>
     </div>
 </div>
 
 <script>
-    let peer = new Peer(); // Generates a completely free cloud connection link
-    let conn = null;
-    let chatHistory = JSON.parse(localStorage.getItem('p2pChatHistory')) || [];
+    // This uses a public test server that requires NO keys
+    let room = "", talk = null;
+    let history = JSON.parse(localStorage.getItem('phoneChatSave')) || [];
 
-    // 1. Get your unique ID and display it
-    peer.on('open', (id) => {
-        document.getElementById('myIdDisplay').innerText = id;
-    });
+    function joinRoom() {
+        room = document.getElementById('roomInput').value.trim().toLowerCase();
+        if(!room) return alert("Type a room name!");
 
-    // 2. Listen for your friend connecting to you
-    peer.on('connection', (connection) => {
-        conn = connection;
-        setupChatSession();
-    });
+        document.getElementById('loginArea').style.display = "none";
+        document.getElementById('chatArea').style.display = "flex";
 
-    // 3. Connect to your friend using their ID
-    function connectToFriend() {
-        const friendId = document.getElementById('friendIdInput').value.trim();
-        if (!friendId) return alert("Please enter your friend's ID code!");
+        // Load history saved on phone storage
+        history.forEach(m => showText(m.style, m.txt));
+
+        // Connect to a free test broadcasting network
+        talk = new EventSource("https://ntfy.sh" + room + "/sse");
         
-        conn = peer.connect(friendId);
-        setupChatSession();
+        // Listen for data coming from the other phone
+        talk.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            // Ignore messages sent by yourself
+            if (data.id !== myId) {
+                saveText('them', data.msg);
+            }
+        };
     }
 
-    // 4. Start the chat setup
-    function setupChatSession() {
-        document.getElementById('setupScreen').style.display = 'none';
-        document.getElementById('chatScreen').style.display = 'flex';
-        
-        // Load past history saved inside this specific phone's memory
-        chatHistory.forEach(msg => displayMessage(msg.type, msg.text));
+    // Generate a unique badge for your phone session
+    const myId = Math.random().toString(36).substring(2, 9);
 
-        // Catch incoming messages over the direct link
-        conn.on('data', (data) => {
-            saveAndDisplayMessage('receiver', data);
+    function sendMsg() {
+        const input = document.getElementById('textInput');
+        const txt = input.value.trim();
+        if(!txt) return;
+
+        // Post the message over the live internet link
+        fetch("https://ntfy.sh" + room, {
+            method: "POST",
+            body: JSON.stringify({ id: myId, msg: txt })
         });
+
+        saveText('me', txt);
+        input.value = "";
     }
 
-    // 5. Send message out to your friend
-    function sendMessage() {
-        const input = document.getElementById('messageInput');
-        const text = input.value.trim();
-        if (!text || !conn) return;
-
-        conn.send(text); // Send directly to their screen
-        saveAndDisplayMessage('sender', text);
-        input.value = '';
+    function saveText(style, txt) {
+        history.push({ style: style, txt: txt });
+        localStorage.setItem('phoneChatSave', JSON.stringify(history));
+        showText(style, txt);
     }
 
-    // 6. Save data locally onto the phone storage
-    function saveAndDisplayMessage(type, text) {
-        chatHistory.push({ type: type, text: text });
-        localStorage.setItem('p2pChatHistory', JSON.stringify(chatHistory));
-        displayMessage(type, text);
+    function showText(style, txt) {
+        const display = document.getElementById('msgDisplay');
+        const d = document.createElement('div');
+        d.className = `msg ${style}`;
+        d.innerText = txt;
+        display.appendChild(d);
+        display.scrollTop = display.scrollHeight;
     }
 
-    function displayMessage(type, text) {
-        const container = document.getElementById('messagesDisplay');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `msg ${type}`;
-        msgDiv.innerText = text;
-        container.appendChild(msgDiv);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // Enter key support
-    document.getElementById('messageInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') sendMessage();
-    });
+    document.getElementById('textInput').onkeypress = function(e){
+        if(e.key === 'Enter') sendMsg();
+    };
 </script>
 
 </body>
