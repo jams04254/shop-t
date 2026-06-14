@@ -1,0 +1,313 @@
+<button onclick="toggleSettings()">Settings</button>
+<!-- The Settings Box (Hidden by default) -->
+<div id="settingsBox" style="display: none; border: 1px solid black; padding: 10px; margin-top: 10px;">
+  <h3>Settings Menu</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* Default background style properties */
+            background-color: #f0f2f5;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            transition: background 0.3s ease;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .btn-reset {
+            margin-top: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <h2>Change Your Background</h2>
+        <!-- The file input allows you to choose an image from your computer -->
+        <input type="file" id="bgPicker" accept="image/*">
+        <br>
+        <button class="btn-reset" id="resetBtn">Reset Default</button>
+    </div>
+
+    <script>
+        const bgPicker = document.getElementById('bgPicker');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 1. Check if an image was previously saved in the browser memory
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedBg = localStorage.getItem('userBackground');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+            }
+        });
+
+        // 2. Handle when the user selects a new local file
+        bgPicker.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                // Convert the local image file into a reusable string URL (Base64)
+                reader.onload = function(e) {
+                    const imageBase64 = e.target.result;
+                    
+                    // Apply it to the page immediately
+                    document.body.style.backgroundImage = `url('${imageBase64}')`;
+                    
+                    // Save the image string directly into localStorage to keep it saved
+                    try {
+                        localStorage.setItem('userBackground', imageBase64);
+                    } catch (error) {
+                        alert("The file might be too large to save! Try a smaller image under 2MB.");
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 3. Optional reset button to clear saved preferences
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem('userBackground');
+            document.body.style.backgroundImage = 'none';
+        });
+    </script>
+
+</body>
+</html>
+
+</body>
+</html>
+
+</body>
+</html>
+
+</div>
+
+<!-- The JavaScript -->
+<script>
+  function toggleSettings() {
+    let box = document.getElementById("settingsBox");
+    
+    // If hidden, show it. If showing, hide it.
+    if (box.style.display === "none") {
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+    }
+  }
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+         body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .hidden { display: none; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        button { background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+   .welcome-message{
+       border-radius:50%;
+       top:80%;
+       right:50%;
+    img{
+    width: 180px;
+    border-radius: 10%;
+    }
+    .menu{
+    width: auto;
+    height: 45px;
+    border-radius: 10px;
+    background: rgb(13, 241, 241)
+    }
+    .btn{
+        background: rgb(41, 174, 192);
+        font-size: 40px;
+        border-radius: 10px;
+        width: 150px;
+        height: 150px;
+    }
+   }
+    }
+        /* A little CSS styling */
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .hidden { display: none; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        button { background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+   .welcome-message{
+       border-radius:50%;
+       top:80%;
+       right:50%;
+   }
+    }
+    </style>
+</head>
+<body>
+    <div class="contain">
+    <div id="logged-out-view">
+        <center><h1>login</h1></center><hr>
+        <center><h2>When you already click Log In it will show the button back and you should click the button back.</h2></center>
+    <center><form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
+        <input type="text" id="username-input" name="name" placeholder="Name" required>
+        <button type="submit" onclick="loginUser()" >Log In</button><br><br><br>
+    </div>
+
+    <div id="logged-in-view" class="hidden">
+        <a id="welcome-message" class="hidden"
+            style="display: inline-flex; 
+          align-items: center; 
+          justify-content: center; 
+          width: 50px; 
+          height: 50px; 
+          background-color: #d3d3d3; 
+          color: black; 
+          border-radius: 50%; 
+          text-decoration: none; 
+          font-family: sans-serif; 
+          font-weight: bold;" href="acc.html">Welcome back!</a>
+        <div id="box" class="hidden">
+            <p id="visal">
+                 <button onclick="logoutUser() ">Log In</button> 
+            </p>
+        </div>
+        
+    <head>
+        <title>Learning app</title>
+        <link rel="stylesheet" href="doulinkgo.css">
+        </head>
+        <style>
+            img{
+    width: 180px;
+    border-radius: 10%;
+    }
+    .menu{
+    width: auto;
+    height: 45px;
+    border-radius: 100px;
+    background: rgb(13, 241, 241)
+;
+    }
+    .btn{
+        background: rgb(13, 241, 241);
+        font-size: 30px;
+        border-radius: 10px;
+        width: 150px;
+        height: 150px;
+    }
+        }
+        </style>
+        <div>
+            <h1>Learning English</h1>
+            <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKeotkfg4wxMPiFwVWIYxKDYhuGTq1ycT2oA&s">
+        </div>
+            <div class="menu">
+                <nav>
+        <center>
+        <a class="btn" href="https://www.youtube.com/@LitaVisal">Page</a>;
+        <a class="btn" href="#about">About</a>
+        </center>
+                </nav>
+        </div>
+        <h1>Unit:1</h1>
+        <h2>Lesson:<\h2><br><br>
+        <center>
+        <a class="btn" type="buttom" href="1.html">1</a><br><br><br>
+        <a class="btn" type="buttom" href="2.html">2</a><br><br><br>
+        <a class="btn" type="buttom" href="3.html">3</a><br><br><br>
+    </center>
+        </p>
+        <p id="about"><h1>About</h1>
+            Learning through conditioning (e.g., associating a stimulus with a reward or consequence).Observational: Learning by watching and imitating others.Cognitive: Actively processing, connecting, and storing information in the brain.Popular Learning StylesWhile people often blend methods, individuals usually gravitate toward one or two primary styles:Visual: Learning through images, graphs, and spatial understanding.
+            Auditory (Aural): Learning through listening, lectures, and discussions.Kinesthetic (Tactile): Learning through physical experience, doing, and hands-on practice.Highly Effective Learning StrategiesSpaced Repetition: Reviewing material at gradually increasing intervals rather than cramming, which helps move information into long-term memory.Active Recall: Testing yourself on the material rather than passively re-reading.
+            The Feynman Technique: Explaining a concept in simple, plain terms as if you were teaching it to someone else. This quickly exposes gaps in your understanding.For tips on how to build strong, sustainable learning habits in your daily routine:
+        </p>
+        <button onclick="logoutUser()" style="background:red;">Log Out</button>
+    </div>
+    <script>
+
+        // 1. Check if the browser already remembers the user when the page loads
+        window.onload = function() {
+            const savedUser = localStorage.getItem("savedUsername");
+
+            if (savedUser) {
+                // If a name is saved, show the logged-in screen
+                showLoggedInScreen(savedUser);
+            }
+        };
+
+        // 2. Function to save the name when they click "Log In"
+        function loginUser() {
+            const nameInput = document.getElementById("username-input").value;
+            
+            if (nameInput.trim() !== "") {
+                // This line saves the name into the browser's memory!
+                localStorage.setItem("savedUsername", nameInput);
+                
+                showLoggedInScreen(nameInput);
+            } else {
+                alert("Please enter a name!");
+            }
+        }
+
+        // 3. Function to clear the memory when they click "Log Out"
+        function logoutUser() {
+            // This line erases the name from the browser's memory
+            localStorage.removeItem("savedUsername");
+            
+            // Switch views back to the login screen
+            document.getElementById("logged-out-view").classList.remove("hidden");
+            document.getElementById("logged-in-view").classList.add("hidden");
+            document.getElementById("username-input").value = "";
+        }
+
+        // Helper function to handle the CSS switching
+        function showLoggedInScreen(username) {
+            document.getElementById("logged-out-view").classList.add("hidden");
+            document.getElementById("logged-in-view").classList.remove("hidden");
+            document.getElementById("welcome-message").innerText =username;
+        }
+    // Instead of localStorage, you fetch from a shared URL
+fetch('https://your-api-database.com')
+  .then(response => response.json())
+  .then(data => {
+      // Now everyone sees the same data from the database
+      showLoggedInScreen(data.username);
+  });
+
+    </script>
+
+</body>
+</html>
