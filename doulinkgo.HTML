@@ -1,3 +1,64 @@
+<button onclick="toggleSettings()">Settings</button>
+`
+<!-- The Settings Box (Hidden by default) -->
+<div id="settingsBox" style="display: none; border: 1px solid black; padding: 10px; margin-top: 10px;">
+  <h3>Settings Menu</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Background Color</title>
+</head>
+<body>
+
+    <h1>Choose Your Background Color</h1>
+
+    <!-- The color picker -->
+    <input type="type" id="colorPicker" oninput="changeAndSaveColor(this.value)">
+    
+
+    <script>
+        function changeAndSaveColor(color) {
+            // This line changes the actual background color of the body
+            document.body.style.backgroundColor = color;
+            
+            // Optional: This saves the color to the browser so it stays after a refresh
+            localStorage.setItem('savedColor', color);
+        }
+
+        // This checks if a color was saved previously and applies it when the page loads
+        window.onload = function() {
+            const savedColor = localStorage.getItem('savedColor');
+            if (savedColor) {
+                document.body.style.backgroundColor = savedColor;
+                document.getElementById('colorPicker').value = savedColor;
+            }
+        };
+    </script>
+
+</body>
+</html>
+
+</body>
+</html>
+
+</div>
+
+<!-- The JavaScript -->
+<script>
+  function toggleSettings() {
+    let box = document.getElementById("settingsBox");
+    
+    // If hidden, show it. If showing, hide it.
+    if (box.style.display === "none") {
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+    }
+  }
+</script>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +66,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
     <style>
-        /* A little CSS styling */
-        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    @media(max 700px){
+         body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
         .hidden { display: none; }
         input, button { padding: 10px; margin: 5px; font-size: 16px; }
         button { background-color: #007BFF; color: white; border: none; cursor: pointer; }
@@ -15,26 +76,7 @@
        border-radius:50%;
        top:80%;
        right:50%;
-   }
-    </style>
-</head>
-<body>
-
-    <div id="logged-out-view">
-        <h2>Please Log In</h2>
-        <input type="text" id="username-input" placeholder="Enter your name">
-        <button onclick="loginUser()" >Log In</button>
-    </div>
-
-    <div id="logged-in-view" class="hidden">
-        <h2 id="welcome-message" class="hidden"style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: ; margin: 0;">Welcome back!</h2>
-        
-    <head>
-        <title>Learning app</title>
-        <link rel="stylesheet" href="doulinkgo.css">
-        </head>
-        <style>
-            img{
+    img{
     width: 180px;
     border-radius: 10%;
     }
@@ -51,6 +93,74 @@
         width: 150px;
         height: 150px;
     }
+   }
+    }
+        /* A little CSS styling */
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .hidden { display: none; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        button { background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+   .welcome-message{
+       border-radius:50%;
+       top:80%;
+       right:50%;
+   }
+    </style>
+</head>
+<body>
+    <div class="contain">
+    <div id="logged-out-view">
+        <h2>Please Log In</h2>
+        <center><h1>You can login and comment.</h1></center><hr>
+    <center><form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
+        <input type="text" id="username-input" name="name" placeholder="Name" required>
+        <button type="submit" onclick="loginUser()" >Log In</button>
+    </div>
+
+    <div id="logged-in-view" class="hidden">
+        <a id="welcome-message" class="hidden"
+            style="display: inline-flex; 
+          align-items: center; 
+          justify-content: center; 
+          width: 50px; 
+          height: 50px; 
+          background-color: #d3d3d3; 
+          color: black; 
+          border-radius: 50%; 
+          text-decoration: none; 
+          font-family: sans-serif; 
+          font-weight: bold;" href="acc.html">Welcome back!</a>
+        <div id="box" class="hidden">
+            <p id="visal">
+                 <button onclick="logoutUser() ">Log In</button> 
+            </p>
+        </div>
+        
+    <head>
+        <title>Learning app</title>
+        <link rel="stylesheet" href="doulinkgo.css">
+        </head>
+        <style>
+            img{
+    width: 180px;
+    border-radius: 10%;
+    }
+    .menu{
+    width: auto;
+    height: 45px;
+    border-radius: 100px;
+    background: rgb(13, 241, 241)
+;
+    }
+    .btn{
+        background: rgb(13, 241, 241);
+        font-size: 30px;
+        border-radius: 10px;
+        width: 150px;
+        height: 150px;
+    }
         </style>
         <div>
             <h1>Learning English</h1>
@@ -60,12 +170,13 @@
                 <nav>
         <center>
         <a class="btn" href="https://www.youtube.com/@LitaVisal">Page</a>;
-        <a class="btn" href="#about">about</a>
+        <a class="btn" href="#about">About</a>
         </center>
                 </nav>
         </div>
         <h1>Unit:1</h1>
         <center>
+        <h1>If you already login Don't click again</h1><a class="btn" type="buttom" href="a.HTML">login</a>
         <h2>Grammar</h2><a class="btn" type="buttom" href="d.html">1</a>
         <h2>video</h2><a class="btn" type="buttom" href="o.HTML">2</a><br>
     </center>
@@ -119,6 +230,7 @@
             document.getElementById("logged-in-view").classList.remove("hidden");
             document.getElementById("welcome-message").innerText =username;
         }
+    
     </script>
 
 </body>
