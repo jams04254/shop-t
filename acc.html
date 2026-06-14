@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <button onclick="history.back()" style="font-size:20px; ">←Back</button>
+  <style>
+   @media screen and (min-width: 768px) {
+    textarea{
+      font-size:20px;
+      height: 400px; 
+      width: 500px;
+      border-radius:10px;
+    }
+     button{
+       width:500px;
+       height:50px;
+       border-radius:100px;
+     }
+  }
+  </style>
+  <h1>Note</h1>
+<textarea type="text" id="note"></textarea><br>
+<button onclick="saveNote()">Save</button>
+
+<!-- 2. The JavaScript Logic -->
+<script>
+  function saveNote() {
+    // Get the value from the input field
+    const noteValue = document.getElementById('note').value;
+
+    // Save it to Local Storage (persists after refresh)
+    localStorage.setItem('userNote', noteValue);
+
+    alert('Note saved!');
+  }
+
+  // Optional: Load the note when the page opens
+  window.onload = function() {
+    const savedData = localStorage.getItem('userNote');
+    if (savedData) {
+      document.getElementById('note').value = savedData;
+    }
+  };
+</script>
