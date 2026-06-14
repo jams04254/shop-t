@@ -1,5 +1,4 @@
 <button onclick="toggleSettings()">Settings</button>
-`
 <!-- The Settings Box (Hidden by default) -->
 <div id="settingsBox" style="display: none; border: 1px solid black; padding: 10px; margin-top: 10px;">
   <h3>Settings Menu</h3>
@@ -7,34 +6,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Choose Background Color</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Background Changer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* Default background style properties */
+            background-color: #f0f2f5;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            transition: background 0.3s ease;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .btn-reset {
+            margin-top: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Choose Your Background Color</h1>
-
-    <!-- The color picker -->
-    <input type="type" id="colorPicker" oninput="changeAndSaveColor(this.value)">
-    
+    <div class="control-panel">
+        <h2>Change Your Background</h2>
+        <!-- The file input allows you to choose an image from your computer -->
+        <input type="file" id="bgPicker" accept="image/*">
+        <br>
+        <button class="btn-reset" id="resetBtn">Reset Default</button>
+    </div>
 
     <script>
-        function changeAndSaveColor(color) {
-            // This line changes the actual background color of the body
-            document.body.style.backgroundColor = color;
-            
-            // Optional: This saves the color to the browser so it stays after a refresh
-            localStorage.setItem('savedColor', color);
-        }
+        const bgPicker = document.getElementById('bgPicker');
+        const resetBtn = document.getElementById('resetBtn');
 
-        // This checks if a color was saved previously and applies it when the page loads
-        window.onload = function() {
-            const savedColor = localStorage.getItem('savedColor');
-            if (savedColor) {
-                document.body.style.backgroundColor = savedColor;
-                document.getElementById('colorPicker').value = savedColor;
+        // 1. Check if an image was previously saved in the browser memory
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedBg = localStorage.getItem('userBackground');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
             }
-        };
+        });
+
+        // 2. Handle when the user selects a new local file
+        bgPicker.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                // Convert the local image file into a reusable string URL (Base64)
+                reader.onload = function(e) {
+                    const imageBase64 = e.target.result;
+                    
+                    // Apply it to the page immediately
+                    document.body.style.backgroundImage = `url('${imageBase64}')`;
+                    
+                    // Save the image string directly into localStorage to keep it saved
+                    try {
+                        localStorage.setItem('userBackground', imageBase64);
+                    } catch (error) {
+                        alert("The file might be too large to save! Try a smaller image under 2MB.");
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 3. Optional reset button to clear saved preferences
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem('userBackground');
+            document.body.style.backgroundImage = 'none';
+        });
     </script>
+
+</body>
+</html>
 
 </body>
 </html>
@@ -106,6 +174,7 @@
        top:80%;
        right:50%;
    }
+    }
     </style>
 </head>
 <body>
@@ -143,6 +212,7 @@
         <link rel="stylesheet" href="doulinkgo.css">
         </head>
         <style>
+        @media screen and (min-width: 768px) {
             img{
     width: 180px;
     border-radius: 10%;
@@ -161,6 +231,7 @@
         width: 150px;
         height: 150px;
     }
+        }
         </style>
         <div>
             <h1>Learning English</h1>
@@ -176,7 +247,6 @@
         </div>
         <h1>Unit:1</h1>
         <center>
-        <h1>If you already login Don't click again</h1><a class="btn" type="buttom" href="a.HTML">login</a>
         <h2>Grammar</h2><a class="btn" type="buttom" href="d.html">1</a>
         <h2>video</h2><a class="btn" type="buttom" href="o.HTML">2</a><br>
     </center>
