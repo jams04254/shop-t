@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Background Changer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -132,7 +131,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
     <style>
          body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
         .hidden { display: none; }
@@ -179,12 +177,12 @@
 <body>
     <div class="contain">
     <div id="logged-out-view">
-        <h2>Please Log In</h2>
-        <center><h1>You can login and comment.</h1></center><hr>
+        <center><h1>login</h1></center><hr>
+        <center><h2>When you already click Log In it will show the button back and you should click the button back.</h2></center>
     <center><form action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
         <input type="text" id="username-input" name="name" placeholder="Name" required>
-        <button type="submit" onclick="loginUser()" >Log In</button>
+        <button type="submit" onclick="loginUser()" >Log In</button><br><br><br>
     </div>
 
     <div id="logged-in-view" class="hidden">
@@ -257,6 +255,7 @@
         <button onclick="logoutUser()" style="background:red;">Log Out</button>
     </div>
     <script>
+
         // 1. Check if the browser already remembers the user when the page loads
         window.onload = function() {
             const savedUser = localStorage.getItem("savedUsername");
@@ -298,7 +297,14 @@
             document.getElementById("logged-in-view").classList.remove("hidden");
             document.getElementById("welcome-message").innerText =username;
         }
-    
+    // Instead of localStorage, you fetch from a shared URL
+fetch('https://your-api-database.com')
+  .then(response => response.json())
+  .then(data => {
+      // Now everyone sees the same data from the database
+      showLoggedInScreen(data.username);
+  });
+
     </script>
 
 </body>
