@@ -1,113 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100% Working Chat</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #e5ddd5; }
-        .chat-container { width: 100%; max-width: 400px; height: 90vh; background: white; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .header { background: #075e54; color: white; padding: 15px; text-align: center; font-weight: bold; }
-        .box { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; }
-        input { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
-        button { padding: 12px; background: #128c7e; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        #chatArea { display: none; flex-direction: column; height: 100%; padding: 0; }
-        .messages { flex: 1; padding: 15px; overflow-y: auto; background: #efeae2; display: flex; flex-direction: column; gap: 8px; }
-        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; font-size: 0.95rem; word-break: break-word; }
-        .me { background: #d9fdd3; align-self: flex-end; }
-        .them { background: white; align-self: flex-start; }
-        .input-box { display: flex; padding: 10px; background: #f0f2f5; gap: 5px; }
-        .input-box input { flex: 1; }
-    </style>
+<meta charset="UTF-8">
+<title>Local Wi-Fi Chat</title>
+<style>
+  body { font-family: sans-serif; background: #111; color: #eee; padding: 20px; max-width: 480px; margin: auto; }
+  textarea, input { width: 100%; margin: 6px 0; padding: 8px; background: #1a1a1a; color: #eee; border: 1px solid #333; }
+  button { padding: 10px; width: 100%; margin: 6px 0; background: #5b8cff; color: white; border: none; border-radius: 6px; }
+  #chat-window { height: 250px; overflow-y: auto; background: #000; padding: 10px; margin: 10px 0; }
+  .me { color: #5b8cff; } .them { color: #4caf82; }
+</style>
 </head>
 <body>
+<h2>Local Wi-Fi Chat</h2>
 
-<div class="chat-container">
-    <div class="header">📱 Live Web Chat</div>
-    
-    <!-- Login screen -->
-    <div id="loginArea" class="box">
-        <label>Pick a room name (Use the same word as your friend):</label>
-        <input type="text" id="roomInput" placeholder="example: secret123" autocomplete="off">
-        <button onclick="joinRoom()">Connect</button>
-    </div>
+<div id="setup">
+  <button onclick="startChat()">Start Chat (Person A)</button>
+  <button onclick="joinChat()">Join Chat (Person B)</button>
 
-    <!-- Chat screen -->
-    <div id="chatArea" class="box">
-        <div id="msgDisplay" class="messages"></div>
-        <div class="input-box">
-            <input type="text" id="textInput" placeholder="Type a message...">
-            <button onclick="sendMsg()">Send</button>
-        </div>
-    </div>
+  <div id="a-flow" style="display:none;">
+    <p>1. Generate code, send to friend:</p>
+    <button onclick="genOffer()">Generate Code</button>
+    <textarea id="offer-out" readonly></textarea>
+    <p>2. Paste friend's reply code:</p>
+    <textarea id="answer-in" placeholder="Paste here"></textarea>
+    <button onclick="connectAnswer()">Connect</button>
+  </div>
+
+  <div id="b-flow" style="display:none;">
+    <p>1. Paste friend's code:</p>
+    <textarea id="offer-in" placeholder="Paste here"></textarea>
+    <button onclick="genAnswer()">Generate Reply Code</button>
+    <p>2. Send this back to friend:</p>
+    <textarea id="answer-out" readonly></textarea>
+  </div>
+  <p id="status">Not connected</p>
+</div>
+
+<div id="chat" style="display:none;">
+  <div id="chat-window"></div>
+  <input id="msg-input" placeholder="Type a message...">
+  <button onclick="sendMsg()">Send</button>
 </div>
 
 <script>
-    // This uses a public test server that requires NO keys
-    let room = "", talk = null;
-    let history = JSON.parse(localStorage.getItem('phoneChatSave')) || [];
+let pc = new RTCPeerConnection();
+let channel;
 
-    function joinRoom() {
-        room = document.getElementById('roomInput').value.trim().toLowerCase();
-        if(!room) return alert("Type a room name!");
+function startChat() {
+  document.getElementById('a-flow').style.display = 'block';
+  document.getElementById('b-flow').style.display = 'none';
+}
+function joinChat() {
+  document.getElementById('b-flow').style.display = 'block';
+  document.getElementById('a-flow').style.display = 'none';
+}
 
-        document.getElementById('loginArea').style.display = "none";
-        document.getElementById('chatArea').style.display = "flex";
-
-        // Load history saved on phone storage
-        history.forEach(m => showText(m.style, m.txt));
-
-        // Connect to a free test broadcasting network
-        talk = new EventSource("https://ntfy.sh" + room + "/sse");
-        
-        // Listen for data coming from the other phone
-        talk.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            // Ignore messages sent by yourself
-            if (data.id !== myId) {
-                saveText('them', data.msg);
-            }
-        };
-    }
-
-    // Generate a unique badge for your phone session
-    const myId = Math.random().toString(36).substring(2, 9);
-
-    function sendMsg() {
-        const input = document.getElementById('textInput');
-        const txt = input.value.trim();
-        if(!txt) return;
-
-        // Post the message over the live internet link
-        fetch("https://ntfy.sh" + room, {
-            method: "POST",
-            body: JSON.stringify({ id: myId, msg: txt })
-        });
-
-        saveText('me', txt);
-        input.value = "";
-    }
-
-    function saveText(style, txt) {
-        history.push({ style: style, txt: txt });
-        localStorage.setItem('phoneChatSave', JSON.stringify(history));
-        showText(style, txt);
-    }
-
-    function showText(style, txt) {
-        const display = document.getElementById('msgDisplay');
-        const d = document.createElement('div');
-        d.className = `msg ${style}`;
-        d.innerText = txt;
-        display.appendChild(d);
-        display.scrollTop = display.scrollHeight;
-    }
-
-    document.getElementById('textInput').onkeypress = function(e){
-        if(e.key === 'Enter') sendMsg();
-    };
-</script>
-
-</body>
-</html>
+async function waitIce() {
+  return new Promise(resolve => {
+    if (pc.iceGatheringState === 'complete') return resolve();
+    pc.addEventListener('icegatheringstatechang
