@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All-in-One Searchable Image Dropdown</title>
     <style>
-           * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -161,7 +161,7 @@
             padding: 12px;
             border: none;
             border-radius: 5px;
-                       font-size: 16px;
+            font-size: 16px;
             font-weight: bold;
             margin-top: 20px;
             cursor: pointer;
@@ -188,62 +188,70 @@
             </div>
         </button>
     </header>
-<!-- The Settings Box (Hidden by default) -->
-<div id="settingsBox" style="display: none; border: 1px solid black; padding: 10px; margin-top: 10px;">
-  <h3>Cart</h3>
-        <div  class="cart-sidebar">
+
+    <div id="settingsBox" style="display: none; border: 1px solid black; padding: 10px; margin-top: 10px;">
+        <h3>Cart</h3>
+        <div class="cart-sidebar">
             <h3>Your Cart</h3>
-            <div id="cart-items-container">
-                </div>
+            <div id="cart-items-container"></div>
             <div class="cart-total">
                 <span>Total:</span>
                 <span id="cart-total-price">$0.00</span>
             </div>
-             <center><form action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
-        <input type="address" id="address" name="address" placeholder="Address" required><br><br>
-        <input type="text" id="username-input" name="name" placeholder="Name" required><br><br>
-        <input type="text" id="id-input" name="id" placeholder="Put your own id name" required><br><br>
-        <input type="text" id="goods-id-input" name="Goods id" placeholder="Goods ID" required><br><br>
-            <button type="submit" class="btn-checkout" onclick="checkout()">Proceed to Checkout</button>
+            
+            <center>
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
+                    <br>
+                    <input type="text" id="address" name="address" placeholder="Address" required><br><br>
+                    <input type="text" id="username-input" name="name" placeholder="Name" required><br><br>
+                    <input type="text" id="phone-input" name="Phone Number" placeholder="Phone Number"><br><br>
+                    <input type="text" id="goods-id-input" name="Goods id" placeholder="" required readonly><br><br>
+                    <button type="submit" class="btn-checkout" onclick="checkout()">Buy now</button>
+                </form>
+            </center>
         </div>
     </div>
-<script>
-  function toggleSettings() {
-    let box = document.getElementById("settingsBox");
+
+    <script>
+        function toggleSettings()
+            let box = document.getElementById("settingsBox");
+            if (box.style.display === "none") {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+        }
+    </script>
     
-    // If hidden, show it. If showing, hide it.
-    if (box.style.display === "none") {
-      box.style.display = "block";
-    } else {
-      box.style.display = "none";
-    }
-  }
-</script><br><br>
+    <br><br>
+    
     <div class="container">
         <div class="products-grid">
             <div class="product-card" data-id="1" data-name="Wireless Headphones" data-price="10">
                 <h3>Wireless Headphones</h3>
                 <h2>ID: 1</h2>
-                <img src="https://m.media-amazon.com/images/I/61RahTQtAqL._AC_UF894,1000_QL80_.jpg">
+                <img src="https://m.media-amazon.com/images/I/61RahTQtAqL._AC_UF894,1000_QL80_.jpg" alt="Headphones" style="max-width:100%; height:auto;">
                 <p class="product-price">$10.00</p>
                 <button class="btn-add">Add to Cart</button>
             </div>
             <div class="product-card" data-id="2" data-name="Smart Watch" data-price="149">
                 <h3>Smart Watch</h3>
-                 <h2>ID: 2</h2>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQo0pApl5ofZ3KmEIxwP0VYTd1it_65iuXjiQ&s">
+                <h2>ID: 2</h2>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQo0pApl5ofZ3KmEIxwP0VYTd1it_65iuXjiQ&s" alt="Watch" style="max-width:100%; height:auto;">
                 <p class="product-price">$149.00</p>
                 <button class="btn-add">Add to Cart</button>
             </div>
             <div class="product-card" data-id="3" data-name="Mechanical Keyboard" data-price="30">
                 <h3>Mechanical Keyboard</h3>
-                 <h2>ID: 3</h2>
-                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-poJ4pNFtoCOzLq0uYkv_22obsic8Tm8fA&s">
+                <h2>ID: 3</h2>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-poJ4pNFtoCOzLq0uYkv_22obsic8Tm8fA&s" alt="Keyboard" style="max-width:100%; height:auto;">
                 <p class="product-price">$30.00</p>
                 <button class="btn-add">Add to Cart</button>
             </div>
-        </div><br><br><br>
+        </div>
+    </div>
+
     <script>
         // Load cart from local storage or start fresh
         let cart = JSON.parse(localStorage.getItem('app_cart')) || [];
@@ -252,6 +260,7 @@
         const cartCountEl = document.getElementById('cart-count');
         const cartItemsContainer = document.getElementById('cart-items-container');
         const cartTotalPriceEl = document.getElementById('cart-total-price');
+        const goodsIdInput = document.getElementById('goods-id-input');
 
         // Initialize App UI
         document.querySelectorAll('.btn-add').forEach(button => {
@@ -266,7 +275,6 @@
         });
 
         function addToCart(id, name, price) {
-            // Check if item already exists in cart
             const existingItem = cart.find(item => item.id === id);
 
             if (existingItem) {
@@ -284,7 +292,6 @@
 
             item.quantity += change;
 
-            // If quantity drops to 0, remove it entirely
             if (item.quantity <= 0) {
                 cart = cart.filter(item => item.id !== id);
             }
@@ -293,7 +300,6 @@
         }
 
         function saveAndRender() {
-            // Save state to browser storage
             localStorage.setItem('app_cart', JSON.stringify(cart));
             renderCart();
         }
@@ -309,6 +315,7 @@
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p class="empty">Your cart is empty.</p>';
                 cartTotalPriceEl.textContent = '$0.00';
+                if (goodsIdInput) goodsIdInput.value = ''; // Clear input if empty
                 return;
             }
 
@@ -336,6 +343,11 @@
 
             // 3. Update Total Price Display
             cartTotalPriceEl.textContent = `$${totalCost.toFixed(2)}`;
+
+            // 4. DYNAMIC UPDATE: Updates the Goods ID string inside the text form field
+            if (goodsIdInput) {
+                goodsIdInput.value = cart.map(item => `${item.id}(x${item.quantity})`).join(', ');
+            }
         }
 
         function checkout() {
@@ -343,8 +355,9 @@
                 alert("Your cart is empty!");
                 return;
             }
+            // Displays checkout details
             alert("Proceeding to payment gateway with data: " + JSON.stringify(cart));
-            // Here you would typically route to Stripe, PayPal, or your own server API.
+            // Paypal API
         }
 
         // Initial setup run on page load
