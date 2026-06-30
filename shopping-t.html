@@ -27,6 +27,30 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        /* Search Bar Styles */
+        #search-bar {
+            padding: 10px 20px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #search-bar:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.2);
+        }
+
+        header button {
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         .cart-icon {
@@ -176,12 +200,25 @@
             text-align: center;
             padding: 20px 0;
         }
+
+        /* Mobile responsiveness for search bar */
+        @media (max-width: 600px) {
+            #search-bar {
+                max-width: 150px;
+            }
+            header {
+                padding: 20px 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h2>Shopping-t</h2>
+        
+        <input type="text" id="search-bar" placeholder="Search for products..." onkeyup="searchProducts()">
+        
         <button onclick="toggleSettings()">
             <div class="cart-icon">
                 🛒 <span id="cart-count">0</span>
@@ -251,7 +288,6 @@
             </div>
         </div>
     </div>
-
     <script>
         // Load cart from local storage or start fresh
         let cart = JSON.parse(localStorage.getItem('app_cart')) || [];
@@ -355,13 +391,29 @@
                 alert("Your cart is empty!");
                 return;
             }
-            // Displays checkout details
-            alert("Click ok" );// + JSON.stringify(cart) <-use when you need
-            // Paypal API
+            alert("Click ok");
+        }
+
+        /* IMPROVED SEARCH FUNCTIONALITY */
+        function searchProducts() {
+            // .trim() removes any accidental spaces from the beginning or end of your search
+            const searchQuery = document.getElementById('search-bar').value.toLowerCase().trim();
+            const products = document.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const productName = product.dataset.name.toLowerCase();
+                const productId = product.dataset.id.toLowerCase(); 
+                
+                // If the search bar is empty, show everything.
+                // Otherwise, check if the product name or the product ID matches what you typed.
+                if (searchQuery === "" || productName.includes(searchQuery) || productId === searchQuery) {
+                    product.style.display = "flex"; 
+                } else {
+                    product.style.display = "none";
+                }
+            });
         }
 
         // Initial setup run on page load
         renderCart();
     </script>
-</body>
-</html>
