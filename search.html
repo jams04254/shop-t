@@ -209,13 +209,13 @@
         </div><br><br><br>
         <center><form action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="0333555b-f17b-4fa0-ae5b-0675529af72d">
-        <div name="cart" class="cart-sidebar">
-            <h3 name="cart">Your Cart</h3>
-            <div name="cart" id="cart-items-container">
+        <div name="cart" class="cart-sidebar" required>
+            <h3 name="cart" required>Your Cart</h3>
+            <div name="cart" id="cart-items-container" required>
                 </div>
-            <div name="total" class="cart-total">
-                <span name="total">Total:</span>
-                <span name="total" id="cart-total-price">$0.00</span>
+            <div name="total" class="cart-total" required>
+                <span name="total" required>Total:</span>
+                <span name="total" id="cart-total-price" required>$0.00</span>
             </div>
         <input type="address" id="address" name="address" placeholder="Address" required><br><br>
         <input type="text" id="username-input" name="name" placeholder="Name" required><br><br>
