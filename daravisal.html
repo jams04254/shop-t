@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daravisal</title>
+    <title>Shopping-t</title>
     <style>
         * {
             margin: 0;
@@ -299,7 +299,7 @@
     </script>
     
     <br><br>
-    <center>
+    
     <div class="container">
         <div class="products-grid">
             <div class="product-card" data-id="1" data-name="Wireless Headphones" data-price="10">
@@ -325,7 +325,7 @@
             </div>
         </div>
     </div>
-    </center>
+    
     <script>
         // State Management
         let cart = JSON.parse(localStorage.getItem('app_cart')) || [];
@@ -379,14 +379,14 @@
 
             // 2. Recommend and force log in if guest user
             if (!currentUser) {
-                alert("You must be logged in to complete a purchase. Please log in now.");
+                alert("You must be logged in to complete a purchase. Please log in now.When you already logged in click buy again!");
                 event.preventDefault(); // Stop form submission
                 handleAuth();           // Launch login prompt
                 return false;
             }
 
             // Everything is verified, let it push data to Web3Forms
-            alert("Order verified! Submitting checkout details...");
+            alert("Order verified! Submitting checkout details... Click ok!");
             return true;
         }
 
